@@ -67,7 +67,7 @@ def recorrer_archivos():
                         continue
                     # Definir variables o contadores para cada archivo
                     alumnos_marcados = 0
-                    alumnos_encontrados = 0
+                    alumnos_totales = 0
 
                     # Obtener nombre de la materia
                     list_filename_split = filename.split()
@@ -81,12 +81,10 @@ def recorrer_archivos():
 
                         # Delimitar el contenido por ";"
                         csv_reader = csv.reader(csv_file, delimiter=';')
-                        print(str(csv_reader))
-                        segundafila = csv_reader[1]
-                        print(str(segundafila))
-                        fecha_asistencia = formatDate(csv_reader[1][2])
+                        (next(csv_reader)[0])  # Eliminar primera fila
+                        fecha_asistencia = formatDate(next(csv_reader)[2])
                         print((fecha_asistencia))
-                        for line_count, columna in enumerate(csv_reader[2:], start=0):
+                        for line_count, columna in enumerate(csv_reader, start=0):
                             try:
                                 # Excepciones
                                 if exeptNombres(str(columna[0])):
@@ -99,8 +97,7 @@ def recorrer_archivos():
                                             str(sheet.cell(row=i, column=6).value),
                                             str(sheet.cell(row=i, column=4).value),
                                             str(sheet.cell(row=i, column=5).value)]
-                                        nombre_armado_sin_normalizar = " ".join(listaNombre)
-                                        nombre_armado = formatString(nombre_armado_sin_normalizar)
+                                        nombre_armado = formatString(" ".join(listaNombre))
                                         if(nombre_armado == nombre_alumno):
                                             asignatura_armada = formatString(sheet.cell(row=i, column=8).value)
                                             if(asignatura_armada == asignatura):
@@ -121,20 +118,20 @@ def recorrer_archivos():
                                         continue
                                 else:
                                     lista = [fecha_asistencia.split()[0], asignatura, nombre_alumno]
-                                    alumnosSinExito.append(';'.join(lista))
+                                    alumnosSinExito.append(' - '.join(lista))
                                     nombresSinExito.append('.'+nombre_alumno+'.')
                                 line_count += 1
                             except Exception as e:
                                 line_count += 1
                                 print("Error columna: "+str(e))
                                 continue
-                        alumnos_encontrados += line_count
+                        alumnos_totales += line_count
                     contExito += alumnos_marcados
-                    contLeidos += (alumnos_encontrados - 2)
-                    print(f'Alumnos encontrados: {alumnos_encontrados - 2}, Alumnos marcados: {alumnos_marcados}')
+                    contLeidos += (alumnos_totales)
+                    print(f'Alumnos marcados: {alumnos_marcados} / {alumnos_totales}')
                     print('')
                     if (alumnos_marcados == 0):
-                        cursosSinExito.append(asignatura+" ("+alumnos_encontrados+" asistidos ) "+fecha_asistencia)
+                        cursosSinExito.append(' | '.join([asignatura, str(alumnos_totales), fecha_asistencia]))
 
         wb.save(filename='actualizado.xlsx')
         print("Se guardo el archivo con el nombre: actualizado.xlsx")
