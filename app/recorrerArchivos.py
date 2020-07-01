@@ -26,8 +26,8 @@ def formatDate(date):
 
 def exeptNombres(nombre):
     lista_excluidos = [
-        'Escuela de Contadores Auditores de Santiago'
-        # 'CAROLINA ELIZABETH LEMUNGUIR SEPULVEDA',
+        'Escuela de Contadores Auditores de Santiago',
+        'CAROLINA ELIZABETH LEMUNGUIR SEPULVEDA'
         # 'CONSUELO VARGAS FIGUEROA'
     ]
     if nombre in lista_excluidos:
@@ -81,24 +81,16 @@ def recorrer_archivos():
 
                         # Delimitar el contenido por ";"
                         csv_reader = csv.reader(csv_file, delimiter=';')
-                        line_count = 0
-                        for columna in csv_reader:
+                        print(str(csv_reader))
+                        segundafila = csv_reader[1]
+                        print(str(segundafila))
+                        fecha_asistencia = formatDate(csv_reader[1][2])
+                        print((fecha_asistencia))
+                        for line_count, columna in enumerate(csv_reader[2:], start=0):
                             try:
-
-                                # Omitir la primera fila
-                                if(line_count == 0):
-                                    line_count += 1
-                                    continue
-
                                 # Excepciones
                                 if exeptNombres(str(columna[0])):
                                     continue
-
-                                # Guardar fecha
-                                if(line_count == 1):
-                                    fecha_asistencia = formatDate(columna[2])
-                                    print(fecha_asistencia)
-
                                 # Guardar cada alumno
                                 nombre_alumno = formatString(str(columna[0]))
                                 for i in range(3, row_count):
