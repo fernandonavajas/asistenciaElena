@@ -55,7 +55,7 @@ def recorrer_archivos():
         row_count = sheet.max_row
         for dirpath, dirnames, filenames in os.walk("./app"):
             if not(dirnames) and (filenames):
-                if dirpath == './app/__pycache__':
+                if dirpath == './app\__pycache__':
                     continue
                 print("Ruta actual:", dirpath)
                 print("")
@@ -77,7 +77,7 @@ def recorrer_archivos():
                     print(asignatura)
 
                     # Abrir cada archivo
-                    with open(dirpath+'/'+filename) as csv_file:
+                    with open(dirpath+'/'+filename, encoding="utf8") as csv_file:
 
                         # Delimitar el contenido por ";"
                         csv_reader = csv.reader(csv_file, delimiter=';')
